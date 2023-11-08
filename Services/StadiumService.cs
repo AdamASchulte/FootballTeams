@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FootballTeams.Services
+namespace FootballTeams.Services;
+
+public class StadiumService
 {
-    internal class StadiumService
-    {
-    }
 }

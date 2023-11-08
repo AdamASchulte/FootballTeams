@@ -25,7 +25,17 @@ class Program
             {
                 case OuterMenuOptions.Teams:
                     //Really we will once again prompt the user to see what they want to do with the team
-                    TeamController.AddTeam();
+                    var teamQueryOption = AnsiConsole.Prompt(
+                        new SelectionPrompt<TeamMenuOptions>()
+                        .Title("How would you like to query the teams??")
+                        .AddChoices(
+                            TeamMenuOptions.AllTeams,
+                            TeamMenuOptions.TeamOwner,
+                            TeamMenuOptions.TeamLocation,
+                            TeamMenuOptions.TeamStadium,
+                            TeamMenuOptions.TeamMascot,
+                            TeamMenuOptions.TeamStaff,
+                            TeamMenuOptions.TeamStats));
                     break;
                 case OuterMenuOptions.Players:
                     TeamController.AddPlayers();
@@ -60,4 +70,15 @@ class Program
         PlayerStats
     }
 
+    enum TeamMenuOptions
+    {
+        AllTeams,
+        TeamByName,
+        TeamOwner,
+        TeamLocation,
+        TeamStadium,
+        TeamMascot,
+        TeamStaff,
+        TeamStats
+    }
 }
