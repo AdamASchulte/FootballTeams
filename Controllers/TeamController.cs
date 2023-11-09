@@ -1,7 +1,18 @@
-﻿namespace FootballTeams.Controllers;
+﻿using FootballTeams.DTOs;
+using FootballTeams.Entities;
+using FootballTeams.Services;
+
+namespace FootballTeams.Controllers;
 
 public class TeamController
 {
+    private readonly TeamService _teamService;
+
+    public TeamController(TeamService teamService)
+    {
+        _teamService = teamService;
+    }
+
     public static void AddTeam()
     {
         throw new NotImplementedException();
@@ -12,9 +23,9 @@ public class TeamController
         throw new NotImplementedException ();
     }
 
-    public static void GetAllTeams()
+    public List<TeamDTO> GetAllTeams()
     {
-        throw new NotImplementedException () ;
+        return _teamService.GetAllTeams();
     }
 
     public static void GetTeamByName(string name)

@@ -12,7 +12,7 @@ public class Team
     public Staff Staff { get; set;}
     public Guid StadiumId { get; set; } = Guid.Empty;
     public Stadium Stadium { get; set; }
-    public Guid TeamStatsId { get; set; } = Guid.Empty;
-    public TeamStats TeamStats { get; set; }
+    public List<Guid> TeamStatsIds { get; set; } = new List<Guid>();
+    public List<TeamStats> TeamStats { get; set; } = new List<TeamStats>();
     public List<Player> Players { get; set; }
 }

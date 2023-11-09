@@ -1,4 +1,5 @@
 ﻿using FootballTeams.Controllers;
+using FootballTeams.DTOs;
 using Spectre.Console;
 
 class Program
@@ -42,15 +43,15 @@ class Program
 
                         if(teamSelection == Teams.AllTeams)
                         {
-
+                            //List<TeamDTO> result = TeamController.GetAllTeams();
                         }
                         else if(teamSelection == Teams.Bengals)
                         {
-
+                            TeamController.GetTeamByName("Bengals");
                         }
                         else if(teamSelection == Teams.Cowboys)
                         {
-
+                            TeamController.GetTeamByName("Cowboys");
                         }
                         else if(teamSelection == Teams.Patriots)
                         {
@@ -94,22 +95,22 @@ class Program
                                 TeamMenuOptions.TeamStats));
                         break;
                     case OuterMenuOptions.Players:
-                        TeamController.AddPlayers();
+                        //TeamController.AddPlayers();
                         break;
                     case OuterMenuOptions.Staff:
-                        TeamController.AddStaff();
+                        //TeamController.AddStaff();
                         break;
                     case OuterMenuOptions.Location:
-                        TeamController.AddLocation();
+                        //TeamController.AddLocation();
                         break;
                     case OuterMenuOptions.Stadium:
-                        TeamController.AddStadium();
+                        //TeamController.AddStadium();
                         break;
                     case OuterMenuOptions.TeamStats:
-                        TeamController.AddTeamStats();
+                        //TeamController.AddTeamStats();
                         break;
                     case OuterMenuOptions.PlayerStats:
-                        TeamController.AddPlayerStats();
+                        //TeamController.AddPlayerStats();
                         break;
                 }
             }
