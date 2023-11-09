@@ -7,4 +7,5 @@ public class TeamStats
     public int Losses { get; set; }
     public int Season { get; set; }
     public Guid TeamId { get; set; } = Guid.Empty;
+    public Team Team { get; set; }
 }

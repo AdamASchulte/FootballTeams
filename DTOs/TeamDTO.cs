@@ -11,3 +11,13 @@ public class TeamDTO
     public List<TeamStatsDTO> TeamStats { get; set; } = new List<TeamStatsDTO>();
     public List<PlayerDTO> Players { get; set; } = new List<PlayerDTO>();
 }
+
+public class UpdateTeamDTO
+{
+    public string Name { get; set; } = string.Empty;
+    public string OwnerName { get; set; } = string.Empty;
+    public string Mascot { get; set; } = string.Empty;
+    public LocationDTO Location { get; set; }
+    public StaffDTO Staff { get; set; }
+    public StadiumDTO Stadium { get; set; }
+}
