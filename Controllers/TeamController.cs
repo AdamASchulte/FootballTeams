@@ -7,33 +7,18 @@ public class TeamController
         throw new NotImplementedException();
     }
 
-    internal static void AddLocation()
+    public static void UpdateTeam()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException ();
     }
 
-    internal static void AddPlayers()
+    public static void GetAllTeams()
     {
-        throw new NotImplementedException();
+        throw new NotImplementedException () ;
     }
 
-    internal static void AddPlayerStats()
+    public static void GetTeamByName(string name)
     {
-        throw new NotImplementedException();
-    }
-
-    internal static void AddStadium()
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static void AddStaff()
-    {
-        throw new NotImplementedException();
-    }
-
-    internal static void AddTeamStats()
-    {
-        throw new NotImplementedException();
+        throw new NotImplementedException ();
     }
 }
