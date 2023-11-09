@@ -24,8 +24,8 @@ public class TeamService
     {
         Team teamToUpdate = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamDto.Name.ToLower().Trim());
 
-        var code = _teamHelper.CalculateHashCode<StaffDTO>(teamDto.Staff);
-        if (_teamHelper.CalculateHashCode<StaffDTO>(teamDto.Staff) == _teamHelper.CalculateHashCode<Staff>(teamToUpdate.Staff)) { }
+        //var code = _teamHelper.CalculateHashCode<StaffDTO>(teamDto.Staff);
+        //if (_teamHelper.CalculateHashCode<StaffDTO>(teamDto.Staff) == _teamHelper.CalculateHashCode<Staff>(teamToUpdate.Staff)) { }
         //update team
     }
 
