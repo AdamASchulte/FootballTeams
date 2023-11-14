@@ -49,12 +49,17 @@ class Program
 
                         if(teamSelection == Teams.AllTeams)
                         {
-                            using(var scope = serviceProvider.CreateScope())
-                            {
-                                var locationController = scope.ServiceProvider.GetRequiredService<LocationController>();
-                                LocationDTO location = locationController.GetLocation(new Guid("beec8d71-9499-495d-83be-4c459c5b8341"));
-                                AnsiConsole.Write(JsonConvert.SerializeObject(location));
-                            }
+                            //using(var scope = serviceProvider.CreateScope())
+                            //{
+                            //    var locationController = scope.ServiceProvider.GetRequiredService<LocationController>();
+                            //    LocationDTO location = locationController.GetLocation(new Guid("beec8d71-9499-495d-83be-4c459c5b8341"));
+                            //    AnsiConsole.Write(JsonConvert.SerializeObject(location));
+                            //}
+                            using var db = new ApplicationDbContext();
+
+                            var locations = db.Locations.ToList();
+
+                            AnsiConsole.WriteLine(JsonConvert.SerializeObject(locations));
               
                             //List<TeamDTO> result = TeamController.GetAllTeams();
 
