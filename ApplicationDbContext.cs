@@ -16,7 +16,6 @@ public class ApplicationDbContext: DbContext
     public DbSet<TeamStats> TeamStats { get; set; }
     public DbSet<Location> Locations { get; set; }
     public DbSet<Player> Players { get; set; }
-    public DbSet<PlayerStats> PlayerStats { get; set; }
     public DbSet<Stadium> Stadiums { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

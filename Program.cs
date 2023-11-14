@@ -1,11 +1,13 @@
 ﻿using FootballTeams.Controllers;
 using FootballTeams.DTOs;
 using Spectre.Console;
+using SQLitePCL;
 
 class Program
 {
     private static void Main(string[] args)
     {
+        SQLitePCL.Batteries.Init();
         var appIsRunning = true;
 
         while (appIsRunning)
