@@ -1,5 +1,4 @@
 ﻿using FootballTeams.DTOs;
-using FootballTeams.Entities;
 using FootballTeams.Services;
 
 namespace FootballTeams.Controllers;

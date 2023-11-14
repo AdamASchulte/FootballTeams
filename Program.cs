@@ -1,5 +1,9 @@
-﻿using FootballTeams.Controllers;
+﻿using FootballTeams;
+using FootballTeams.Controllers;
 using FootballTeams.DTOs;
+using FootballTeams.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Spectre.Console;
 using SQLitePCL;
 
@@ -9,7 +13,7 @@ class Program
     {
         SQLitePCL.Batteries.Init();
         var appIsRunning = true;
-
+        var serviceProvider = ConfigureServices();
         while (appIsRunning)
         {
             var view = AnsiConsole.Prompt(
@@ -45,7 +49,15 @@ class Program
 
                         if(teamSelection == Teams.AllTeams)
                         {
+                            using(var scope = serviceProvider.CreateScope())
+                            {
+                                var locationController = scope.ServiceProvider.GetRequiredService<LocationController>();
+                                LocationDTO location = locationController.GetLocation(new Guid("beec8d71-9499-495d-83be-4c459c5b8341"));
+                                AnsiConsole.Write(JsonConvert.SerializeObject(location));
+                            }
+              
                             //List<TeamDTO> result = TeamController.GetAllTeams();
+
                         }
                         else if(teamSelection == Teams.Bengals)
                         {
@@ -119,6 +131,17 @@ class Program
 
             
         }
+    }
+    private static IServiceProvider ConfigureServices()
+    {
+        var services = new ServiceCollection();
+
+        services.AddScoped<ApplicationDbContext>();
+        services.AddScoped<LocationController>();
+        services.AddScoped<LocationService>();
+        // Other service registrations...
+
+        return services.BuildServiceProvider();
     }
 
     enum ViewOptions
