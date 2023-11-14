@@ -1,21 +1,11 @@
-﻿using FootballTeams.Controllers;
-using FootballTeams.Entities;
+﻿using FootballTeams.Entities;
 using FootballTeams.Entities.Configurations;
-using FootballTeams.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using SQLitePCL;
 
 namespace FootballTeams;
 
-public class ApplicationDbContext: DbContext
+internal class ApplicationDbContext : DbContext
 {
-    //public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-    //    : base(options)
-    //{
-        
-    //}
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlite($"Data Source = FootballTeams.db");
@@ -53,10 +43,5 @@ public class ApplicationDbContext: DbContext
         }
 
         return base.SaveChanges();
-    }
-
-    public static void InitializeDatabase(ApplicationDbContext context)
-    {
-        context.Database.EnsureCreated();
     }
 }

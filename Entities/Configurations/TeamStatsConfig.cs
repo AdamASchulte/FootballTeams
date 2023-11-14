@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FootballTeams.Entities.Configurations;
 
-public class TeamStatsConfig : IEntityTypeConfiguration<TeamStats>
+internal class TeamStatsConfig : IEntityTypeConfiguration<TeamStats>
 {
     public void Configure(EntityTypeBuilder<TeamStats> builder)
     {

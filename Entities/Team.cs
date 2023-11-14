@@ -1,6 +1,6 @@
 ﻿namespace FootballTeams.Entities;
 
-public class Team
+internal class Team
 {
     public Guid Id { get; set; } = Guid.Empty;
     public string Name { get; set; } = string.Empty;

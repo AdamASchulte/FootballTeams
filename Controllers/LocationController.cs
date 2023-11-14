@@ -1,18 +1,37 @@
 ﻿using FootballTeams.DTOs;
-using FootballTeams.Services;
+using FootballTeams.Entities;
+using Spectre.Console;
 
 namespace FootballTeams.Controllers;
 
-public class LocationController
+internal static class LocationController
 {
-    private readonly LocationService _locationService;
-    public LocationController(LocationService locationService)
+    internal static LocationDTO GetLocation(string city)
     {
-        _locationService = locationService;
+        using ApplicationDbContext _context = new ApplicationDbContext();
+
+        var location = _context.Locations.FirstOrDefault(l => l.City == city);
+
+        LocationDTO locationDto = new LocationDTO()
+        {
+            City = location.City,
+            State = location.State,
+        };
+
+        return locationDto;
     }
 
-    public LocationDTO GetLocation(Guid Id)
+    internal static void AddLocation()
     {
-        return _locationService.GetLocation(Id);
+        var city = AnsiConsole.Ask<string>("Location's City");
+        var state = AnsiConsole.Ask<string>("Location's state");
+        using var _context = new ApplicationDbContext();
+        _context.Add(new Location
+        {
+            City = city,
+            State = state
+        });
+
+        _context.SaveChanges();
     }
 }

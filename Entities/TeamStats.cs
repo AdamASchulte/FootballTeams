@@ -1,6 +1,6 @@
 ﻿namespace FootballTeams.Entities;
 
-public class TeamStats
+internal class TeamStats
 {
     public Guid Id { get; set; } = Guid.Empty;
     public int Wins { get; set; }
