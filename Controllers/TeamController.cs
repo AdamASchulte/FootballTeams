@@ -1,7 +1,9 @@
 ﻿using FootballTeams.DTOs;
 using FootballTeams.Entities;
 using Microsoft.EntityFrameworkCore;
+using Spectre.Console;
 using SQLitePCL;
+using System.Numerics;
 
 namespace FootballTeams.Controllers;
 
@@ -43,7 +45,7 @@ internal static class TeamController
         _context.SaveChanges();
     }
 
-    public static List<TeamDTO> GetAllTeams()
+    public static void GetAllTeams()
     {
         using var _context = new ApplicationDbContext();
 
@@ -90,14 +92,33 @@ internal static class TeamController
             };
             teamDtos.Add(teamDTO);
         }
-        return teamDtos;
-    }
 
-    public static TeamDTO GetTeamByName(string name)
+        string response = "";
+
+        foreach (var teamDto in teamDtos)
+         {
+            string playerString = "";
+            string teamStatString = "";
+            foreach (var player in teamDto.Players)
+            {
+                playerString += $"Player: {player.Name}\nJersery Number: {player.JerseyNumber}\nPosition: {player.Position}\nSalary: {player.Salary}\n";
+            }
+            foreach(var teamStat in teamDto.TeamStats)
+            {
+                teamStatString += $"Stats for the {teamStat.Season} season:\nWins: {teamStat.Wins}\nLosses: {teamStat.Losses}\n";
+            }
+            string currentTeam = $"Info for the {teamDto.Name}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \nHead Coach: {teamDto.Staff.HeadCoach}\nOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\nDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}"; ;
+
+            response += currentTeam;
+        }
+        AnsiConsole.WriteLine(response);
+
+        return;
+    }
+    public static void GetTeamByName(string teamName)
     {
         using var _context = new ApplicationDbContext();
-
-        Team team = _context.Teams.Include(t => t.Staff).Include(t => t.Location).Include(t => t.TeamStats).Include(t => t.Players).Include(t => t.Stadium).FirstOrDefault(t => t.Name.ToLower().Trim() == name.ToLower().Trim());
+        Team team = _context.Teams.Include(t => t.Staff).Include(t => t.Location).Include(t => t.TeamStats).Include(t => t.Players).Include(t => t.Stadium).FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim());
 
         TeamDTO teamDto = new TeamDTO
         {
@@ -135,17 +156,53 @@ internal static class TeamController
             }).ToList()
         };
 
-        return teamDto;
+        //TeamDTO fakeTeam = new TeamDTO
+        //{
+        //    Name = teamName,
+        //    OwnerName = "Jimmy",
+        //    Mascot = "fakeMascot",
+        //    Location = new LocationDTO
+        //    {
+        //        City = "plano",
+        //        State = "texas"
+        //    },
+        //    Staff = new StaffDTO
+        //    {
+        //        HeadCoach = "yomama",
+        //        OffensiveCoordinator = "joe biden",
+        //        DefensiveCoordinator = "trump",
+        //        SpecialTeamsCooridnator = "obunga"
+        //    },
+        //    Stadium = new StadiumDTO { MaxCapacity = 50000},
+        //    TeamStats = new List<TeamStatsDTO>() { new TeamStatsDTO { Wins = 10, Losses = 7, Season = 2019 }, new TeamStatsDTO { Wins = 11, Losses = 6, Season = 2020 } },
+        //    Players = new List<PlayerDTO>() { new PlayerDTO { JerseyNumber = 1, Name = "aiden", Position = "runningback", Salary = 100000 }, new PlayerDTO { JerseyNumber = 2, Name = "aalok", Position = "runningback", Salary = 100000 } },
+        //};
+
+        string teamStatString = "";
+        foreach (var teamStat in teamDto.TeamStats)
+        {
+            teamStatString += $"Stats for the {teamStat.Season} season:\nWins: {teamStat.Wins}\nLosses: {teamStat.Losses}\n";
+        }
+        string playerString = "";
+        foreach(PlayerDTO player in teamDto.Players)
+        {
+            playerString += $"Player: {player.Name}\nJersery Number: {player.JerseyNumber}\nPosition: {player.Position}\nSalary: {player.Salary}\n";
+        }
+
+        string response = $"Info for the {teamName}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \nHead Coach: {teamDto.Staff.HeadCoach}\nOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\nDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}";
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
-    public static LocationDTO GetLocationByTeam(string teamName)
+    public static void GetLocationByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
 
         Team? team = _context.Teams.Include(t => t.Location).FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim());
         if (team == null)
         {
-            return null;
+            return;
         }
 
         LocationDTO location = new LocationDTO
@@ -154,17 +211,26 @@ internal static class TeamController
             State = team.Location.State,
         };
 
-        return location;
+        //LocationDTO fakeLocation = new LocationDTO
+        //{
+        //    City = "plano",
+        //    State = "texas"
+        //};
+
+        string response = $"The {teamName} are located in {location.City}, {location.State}\n";
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
-    public static StadiumDTO GetStadiumByTeam(string name)
+    public static void GetStadiumByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
 
-        Team? team = _context.Teams.Include(t => t.Stadium).FirstOrDefault(t => t.Name.ToLower().Trim().Trim() == name.ToLower().Trim());
+        Team? team = _context.Teams.Include(t => t.Stadium).FirstOrDefault(t => t.Name.ToLower().Trim().Trim() == teamName.ToLower().Trim());
         if (team == null)
         {
-            return null;
+            return;
         }
 
         StadiumDTO stadium = new StadiumDTO
@@ -172,17 +238,25 @@ internal static class TeamController
             MaxCapacity = team.Stadium.MaxCapacity
         };
 
-        return stadium;
+        //StadiumDTO fakeStadium = new StadiumDTO
+        //{
+        //    MaxCapacity = 60000
+        //};
+
+        string response = $"The {teamName} stadium has a max capacity of: {stadium.MaxCapacity}\n";
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
-    public static StaffDTO GetStaffByTeam(string name)
+    public static void GetStaffByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
 
-        Team team = _context.Teams.Include(t => t.Staff).FirstOrDefault(t => t.Name.ToLower().Trim() == name.ToLower().Trim());
+        Team team = _context.Teams.Include(t => t.Staff).FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim());
         if (team == null)
         {
-            return null;
+            return;
         }
 
         StaffDTO staff = new StaffDTO
@@ -193,17 +267,29 @@ internal static class TeamController
             SpecialTeamsCooridnator = team.Staff.SpecialTeamsCoordinator
         };
 
-        return staff;
+        //StaffDTO fakeStaff = new StaffDTO
+        //{
+        //    HeadCoach = "Jim",
+        //    OffensiveCoordinator = "bob",
+        //    DefensiveCoordinator = "james",
+        //    SpecialTeamsCooridnator = "jimbo"
+        //};
+
+        string response = $"The staff for the {teamName} is:\nHead Coach: {staff.HeadCoach}\nOffensive Coordinator: {staff.OffensiveCoordinator}\nDefensive Coordinator: {staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {staff.SpecialTeamsCooridnator}\n";
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
-    public static List<TeamStatsDTO> GetAllStatsByTeam(string name)
+    public static void GetAllStatsByTeam(string name)
     {
         using var _context = new ApplicationDbContext();
 
         Team team = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == name.ToLower().Trim());
         if (team == null)
         {
-            return null;
+            AnsiConsole.WriteLine($"No teamStats for the {name}\n");
+            return;
         }
 
         List<TeamStatsDTO> allTeamStats = _context.TeamStats.Where(ts => ts.TeamId == team.Id).Select(ts => new TeamStatsDTO
@@ -214,36 +300,52 @@ internal static class TeamController
             TeamName = team.Name,
         }).ToList();
 
-        return allTeamStats;
-    }
+        //List<TeamStatsDTO> fakeStats = new List<TeamStatsDTO>()
+        //{
+        //    new TeamStatsDTO
+        //    {
+        //        Wins = 11,
+        //        Losses = 4,
+        //        Season = 2020,
+        //    },
+        //    new TeamStatsDTO
+        //    {
+        //        Wins = 4,
+        //        Losses = 11,
+        //        Season = 2019,
+        //    },
+        //    new TeamStatsDTO
+        //    {
+        //        Wins = 12,
+        //        Losses = 3,
+        //        Season = 2021,
+        //    }
+        //};
 
-    public static List<TeamStatsDTO> GetTeamsStats(string teamName)
-    {
-        using var _context = new ApplicationDbContext();
+        string response = "";
 
-        Guid teamId = _context.Teams.FirstOrDefault(t => t.Name == teamName).Id;
-
-        List<TeamStatsDTO> allStatsForTeam = _context.TeamStats.Where(ts => ts.TeamId == teamId).Select(ts => new TeamStatsDTO
+        foreach(TeamStatsDTO teamStats in allTeamStats)
         {
-            Wins = ts.Wins,
-            Losses = ts.Losses,
-            Season = ts.Season,
-            TeamName = ts.Team.Name
-        }).ToList();
+            response += $"Stats for the {name} in {teamStats.Season}: \nWins: {teamStats.Wins}\nLosses: {teamStats.Losses}\n";
+        }
 
-        return allStatsForTeam;
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
-    public static TeamStatsDTO GetStatsForTeamBySeason(string teamName, int season)
+    public static void GetStatsForTeamBySeason(string teamName)
     {
+        int season = AnsiConsole.Ask<int>("Please type a year after 2016 and press enter: ");
         using var _context = new ApplicationDbContext();
 
         TeamStats teamStats = _context.TeamStats.FirstOrDefault(ts => ts.Season == season && ts.Team.Name.ToLower().Trim() == teamName.ToLower().Trim());
         if (teamStats == null)
         {
-            return null;
+            AnsiConsole.WriteLine($"No team stats for the {teamName} for the {season} season\n");
+            return;
         }
-        TeamStatsDTO teamStatsDTO = new TeamStatsDTO
+        TeamStatsDTO teamStatsDto = new TeamStatsDTO
         {
             Wins = teamStats.Wins,
             Losses = teamStats.Losses,
@@ -251,24 +353,43 @@ internal static class TeamController
             TeamName = teamStats.Team.Name
         };
 
-        return teamStatsDTO;
+        //TeamStatsDTO fakeDto = new TeamStatsDTO()
+        //{
+        //    Wins = 12,
+        //    Losses = 5,
+        //    Season = 2019,
+        //    TeamName = "FakeTeam"
+        //};
+
+        string response = $"Team Stats for the {teamName}: \nWins: {teamStatsDto.Wins}\nLosses: {teamStatsDto.Losses}\nSeason: {season}\n";
+        AnsiConsole.WriteLine(response);
+
+        return; ;
     }
 
-    public static string GetOwnerByTeam(string teamName)
+    public static void GetOwnerByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
 
-        string owner = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim()).OwnerName;
+        string owner = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim())?.OwnerName;
 
-        return owner;
+        string response = $"The owner of the {teamName} is {owner}\n";
+
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
-    public static string GetMascotByTeam(string teamName)
+    public static void GetMascotByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
 
-        string mascot = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim()).Mascot;
+        string mascot = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim())?.Mascot;
 
-        return mascot;
+        string response = $"The mascot for the {teamName} is {mascot}\n";
+
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 }

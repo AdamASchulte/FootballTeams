@@ -18,76 +18,103 @@ class Program
 
             if (view == ViewOptions.Fan)
             {
-                var teamSelection = AnsiConsole.Prompt(
-                new SelectionPrompt<Teams>()
-                .Title("What Team would you like to look at?")
-                .AddChoices(
-                    Teams.AllTeams,
-                    Teams.Bengals,
-                    Teams.Cowboys,
-                    Teams.Patriots,
-                    Teams.Saints));
+                bool runLoop = true;
+                while(runLoop)
+                {
+                    var teamSelection = AnsiConsole.Prompt(
+                    new SelectionPrompt<Teams>()
+                    .Title("What Team would you like to look at?")
+                    .AddChoices(
+                        Teams.AllTeams,
+                        Teams.Bengals,
+                        Teams.Cowboys,
+                        Teams.Patriots,
+                        Teams.Saints,
+                        Teams.Back));
 
-                if (teamSelection == Teams.AllTeams)
-                {
-                    TeamController.GetAllTeams();
-                }
-                else
-                {
-                    string teamName = teamSelection.ToString();
-                    var queryOption = AnsiConsole.Prompt(
-                        new SelectionPrompt<TeamMenuOptions>()
-                        .Title("How would you like to query the team?")
-                        .AddChoices(
-                            TeamMenuOptions.GetTeam,
-                            TeamMenuOptions.GetTeamOwner,
-                            TeamMenuOptions.GetTeamPlayers,
-                            TeamMenuOptions.GetPlayerByJerseyNumber,
-                            TeamMenuOptions.GetPlayerByName,
-                            TeamMenuOptions.GetTeamStadium,
-                            TeamMenuOptions.GetTeamMascot,
-                            TeamMenuOptions.GetAllTeamStats,
-                            TeamMenuOptions.GetTeamStatsBySeason,
-                            TeamMenuOptions.GetTeamStaff,
-                            TeamMenuOptions.GetTeamLocation
-                            ));
-                    switch (queryOption)
+                    if (teamSelection == Teams.AllTeams)
                     {
-                        case (TeamMenuOptions.GetTeam):
-                            TeamController.GetTeamByName(teamName);
-                            break;
-                        case (TeamMenuOptions.GetTeamOwner):
-                            TeamController.GetOwnerByTeam(teamName);
-                            break;
-                        case (TeamMenuOptions.GetTeamPlayers):
-                            PlayerController.GetPlayersByTeam(teamName);
-                            break;
-                        case (TeamMenuOptions.GetPlayerByJerseyNumber):
-                            PlayerController.GetPlayerByJerseryNumber(teamName, 1);
-                            break;
-                        case (TeamMenuOptions.GetPlayerByName):
-                            PlayerController.GetPlayerByName(teamName, "playerName");
-                            break;
-                        case (TeamMenuOptions.GetTeamStadium):
-                            TeamController.GetStadiumByTeam(teamName);
-                            break;
-                        case (TeamMenuOptions.GetTeamMascot):
-                            TeamController.GetMascotByTeam(teamName);
-                            break;
-                        case (TeamMenuOptions.GetAllTeamStats):
-                            TeamController.GetAllStatsByTeam(teamName);
-                            break;
-                        case (TeamMenuOptions.GetTeamStatsBySeason):
-                            TeamController.GetStatsForTeamBySeason(teamName, 2019);
-                            break;
-                        case (TeamMenuOptions.GetTeamStaff):
-                            TeamController.GetStaffByTeam(teamName);
-                            break;
-                        case (TeamMenuOptions.GetTeamLocation):
-                            TeamController.GetLocationByTeam(teamName);
-                            break;
+                        TeamController.GetAllTeams();
+                    }
+                    else if(teamSelection == Teams.Back)
+                    {
+                        runLoop = false;
+                    }
+                    else
+                    {
+                        string teamName = "";
+                        if (teamSelection == Teams.Cowboys)
+                        {
+                            teamName = "Dallas Cowboys";
+                        }
+                        else if(teamSelection == Teams.Patriots)
+                        {
+                            teamName = "New England Patriots";
+                        }
+                        else if(teamSelection == Teams.Saints)
+                        {
+                            teamName = "New Orleans Saints";
+                        }
+                        else if(teamSelection == Teams.Bengals)
+                        {
+                            teamName = "Cincinnati Bengals";
+                        }
+                        
+                        var queryOption = AnsiConsole.Prompt(
+                            new SelectionPrompt<TeamMenuOptions>()
+                            .Title("How would you like to query the team?")
+                            .AddChoices(
+                                TeamMenuOptions.GetTeam,
+                                TeamMenuOptions.GetTeamOwner,
+                                TeamMenuOptions.GetTeamPlayers,
+                                TeamMenuOptions.GetPlayerByJerseyNumber,
+                                TeamMenuOptions.GetPlayerByName,
+                                TeamMenuOptions.GetTeamStadium,
+                                TeamMenuOptions.GetTeamMascot,
+                                TeamMenuOptions.GetAllTeamStats,
+                                TeamMenuOptions.GetTeamStatsBySeason,
+                                TeamMenuOptions.GetTeamStaff,
+                                TeamMenuOptions.GetTeamLocation
+                                ));
+                        switch (queryOption)
+                        {
+                            case (TeamMenuOptions.GetTeam):
+                                TeamController.GetTeamByName(teamName);
+                                break;
+                            case (TeamMenuOptions.GetTeamOwner):
+                                TeamController.GetOwnerByTeam(teamName);
+                                break;
+                            case (TeamMenuOptions.GetTeamPlayers):
+                                PlayerController.GetPlayersByTeam(teamName);
+                                break;
+                            case (TeamMenuOptions.GetPlayerByJerseyNumber):
+                                PlayerController.GetPlayerByJerseryNumber(teamName, 1);
+                                break;
+                            case (TeamMenuOptions.GetPlayerByName):
+                                PlayerController.GetPlayerByName(teamName, "playerName");
+                                break;
+                            case (TeamMenuOptions.GetTeamStadium):
+                                TeamController.GetStadiumByTeam(teamName);
+                                break;
+                            case (TeamMenuOptions.GetTeamMascot):
+                                TeamController.GetMascotByTeam(teamName);
+                                break;
+                            case (TeamMenuOptions.GetAllTeamStats):
+                                TeamController.GetAllStatsByTeam(teamName);
+                                break;
+                            case (TeamMenuOptions.GetTeamStatsBySeason):
+                                TeamController.GetStatsForTeamBySeason(teamName);
+                                break;
+                            case (TeamMenuOptions.GetTeamStaff):
+                                TeamController.GetStaffByTeam(teamName);
+                                break;
+                            case (TeamMenuOptions.GetTeamLocation):
+                                TeamController.GetLocationByTeam(teamName);
+                                break;
+                        }
                     }
                 }
+                
             }
             else if (view == ViewOptions.Management)
             {
@@ -126,6 +153,13 @@ class Program
         Bengals,
         Cowboys,
         Saints,
-        Patriots
+        Patriots,
+        Back
+    }
+
+    enum ManagementView
+    {
+        ViewData,
+        AddOrUpdateData
     }
 }

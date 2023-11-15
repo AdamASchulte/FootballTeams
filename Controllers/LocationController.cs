@@ -23,8 +23,8 @@ internal static class LocationController
 
     internal static void AddLocation()
     {
-        var city = AnsiConsole.Ask<string>("Location's City");
-        var state = AnsiConsole.Ask<string>("Location's state");
+        string city = AnsiConsole.Ask<string>("Location's City");
+        string state = AnsiConsole.Ask<string>("Location's State");
         using var _context = new ApplicationDbContext();
         _context.Add(new Location
         {
