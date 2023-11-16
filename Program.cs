@@ -103,7 +103,7 @@ class Program
                                         PlayerController.UpdatePlayerSalary(teamName);
                                         break;
                                     case (AddOrUpdateOptions.DeletePlayer):
-                                        //Implement DeletePlayer
+                                        PlayerController.DeletePlayer(teamName);
                                         break;
                                 }
                             }
