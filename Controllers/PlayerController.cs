@@ -1,11 +1,37 @@
 ﻿using FootballTeams.DTOs;
 using FootballTeams.Entities;
 using Microsoft.EntityFrameworkCore;
+using Spectre.Console;
 
 namespace FootballTeams.Controllers;
 
 internal class PlayerController
 {
+    public static void AddPlayer(string teamName)
+    {
+        using var _context = new ApplicationDbContext();
+
+        string playerName = AnsiConsole.Ask<string>("Please enter the name of the new player");
+
+        int jerseyNumber = AnsiConsole.Ask<int>("Please enter the jersery number of the new player");
+
+        int salary = AnsiConsole.Ask<int>("Please enter the salary of the new player");
+
+        string position = AnsiConsole.Ask<string>("Please enter the position of the new player");
+
+        Player player = new Player()
+        {
+            Name = playerName,
+            JerseyNumber = jerseyNumber,
+            Salary = salary,
+            Position = position,
+            TeamId = _context.Teams.FirstOrDefault(t => t.Name == teamName).Id
+        };
+
+        _context.Add(player);
+
+        _context.SaveChanges();
+    }
     public static List<PlayerDTO> GetPlayersByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
@@ -18,6 +44,7 @@ internal class PlayerController
                 Position = p.Position,
                 Salary = p.Salary
             }).ToList();
+
         return players;
     }
 

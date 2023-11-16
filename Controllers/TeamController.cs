@@ -14,36 +14,108 @@ internal static class TeamController
         return;
     }
 
-    public static void UpdateTeam(UpdateTeamDTO teamDto)
+    public static void UpdateTeamMascot(string teamName)
     {
         using var _context = new ApplicationDbContext();
 
-        Team teamToUpdate = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamDto.Name.ToLower().Trim());
-
-        if (teamToUpdate == null)
+        Team team = _context.Teams.FirstOrDefault(t => t.Name == teamName);
+        if (team == null)
         {
+            AnsiConsole.WriteLine("Critical Error, Team not found");
             return;
         }
 
-        Staff staffToUpdate = _context.Staffs.FirstOrDefault(s => s.Id == teamToUpdate.StaffId);
-        Location locationToUpdate = _context.Locations.FirstOrDefault(l => l.Id == teamToUpdate.LocationId);
-        Stadium stadiumToUpdate = _context.Stadiums.FirstOrDefault(st => st.Id == teamToUpdate.StadiumId);
+        string mascotName = AnsiConsole.Ask<string>($"Please enter the new name for the {teamName} mascot:");
 
-        teamToUpdate.Mascot = teamDto.Mascot;
-        teamToUpdate.OwnerName = teamDto.OwnerName;
+        team.Mascot = mascotName;
 
-        staffToUpdate.OffensiveCoordinator = teamDto.Staff.OffensiveCoordinator;
-        staffToUpdate.DefensiveCoordinator = teamDto.Staff.DefensiveCoordinator;
-        staffToUpdate.SpecialTeamsCoordinator = teamDto.Staff.SpecialTeamsCooridnator;
-        staffToUpdate.HeadCoach = teamDto.Staff.HeadCoach;
+        _context.Teams.Update(team);
 
-        locationToUpdate.City = teamDto.Location.City;
-        locationToUpdate.State = teamDto.Location.State;
+        _context.SaveChanges();
 
-        stadiumToUpdate.MaxCapacity = teamDto.Stadium.MaxCapacity;
+        return;
+    }
+
+    public static void UpdateTeamOwner(string teamName)
+    {
+        using var _context = new ApplicationDbContext();
+
+        Team team = _context.Teams.FirstOrDefault(t => t.Name == teamName);
+        if (team == null)
+        {
+            AnsiConsole.WriteLine("Critical Error, Team not found");
+            return;
+        }
+
+        string ownerName = AnsiConsole.Ask<string>($"Please enter the new name for the {teamName} mascot");
+
+        team.OwnerName = ownerName;
+
+        _context.Teams.Update(team);
+
+        _context.SaveChanges();
+
+        return;
+    }
+
+    public static void UpdateTeamStaff(string teamName)
+    {
+        using var _context = new ApplicationDbContext();
+        Team team = _context.Teams.Include(t => t.Staff).FirstOrDefault(t => t.Name == teamName);
+        if(team == null)
+        {
+            AnsiConsole.WriteLine("Critical Error, Team not found");
+            return;
+        }
+
+        string headCoach = AnsiConsole.Ask<string>($"Please enter the new name of the head coach for the {teamName}");
+
+        string offensiveCoordinator = AnsiConsole.Ask<string>($"Please enter the new name of the offensive coordinator for the {teamName}");
+
+        string defensiveCoordinator = AnsiConsole.Ask<string>($"Please enter the new name of the defensive coordinator for the {teamName}");
+
+        string specialTeamsCoordinator = AnsiConsole.Ask<string>($"Please enter the new name of the special teams coordinator for the {teamName}");
+
+        team.Staff.OffensiveCoordinator = offensiveCoordinator;
+        team.Staff.HeadCoach = headCoach;
+        team.Staff.DefensiveCoordinator = defensiveCoordinator;
+        team.Staff.SpecialTeamsCoordinator = specialTeamsCoordinator;
+
+        _context.Teams.Update(team);
 
         _context.SaveChanges();
     }
+
+    //public static void UpdateTeam(UpdateTeamDTO teamDto)
+    //{
+    //    using var _context = new ApplicationDbContext();
+
+    //    Team teamToUpdate = _context.Teams.FirstOrDefault(t => t.Name.ToLower().Trim() == teamDto.Name.ToLower().Trim());
+
+    //    if (teamToUpdate == null)
+    //    {
+    //        return;
+    //    }
+
+    //    Staff staffToUpdate = _context.Staffs.FirstOrDefault(s => s.Id == teamToUpdate.StaffId);
+    //    Location locationToUpdate = _context.Locations.FirstOrDefault(l => l.Id == teamToUpdate.LocationId);
+    //    Stadium stadiumToUpdate = _context.Stadiums.FirstOrDefault(st => st.Id == teamToUpdate.StadiumId);
+
+    //    teamToUpdate.Mascot = teamDto.Mascot;
+    //    teamToUpdate.OwnerName = teamDto.OwnerName;
+
+    //    staffToUpdate.OffensiveCoordinator = teamDto.Staff.OffensiveCoordinator;
+    //    staffToUpdate.DefensiveCoordinator = teamDto.Staff.DefensiveCoordinator;
+    //    staffToUpdate.SpecialTeamsCoordinator = teamDto.Staff.SpecialTeamsCooridnator;
+    //    staffToUpdate.HeadCoach = teamDto.Staff.HeadCoach;
+
+    //    locationToUpdate.City = teamDto.Location.City;
+    //    locationToUpdate.State = teamDto.Location.State;
+
+    //    stadiumToUpdate.MaxCapacity = teamDto.Stadium.MaxCapacity;
+
+    //    _context.SaveChanges();
+    //}
 
     public static void GetAllTeams()
     {
@@ -119,7 +191,11 @@ internal static class TeamController
     {
         using var _context = new ApplicationDbContext();
         Team team = _context.Teams.Include(t => t.Staff).Include(t => t.Location).Include(t => t.TeamStats).Include(t => t.Players).Include(t => t.Stadium).FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim());
-
+        if(team == null )
+        {
+            AnsiConsole.WriteLine("Critical Error, No team found with that name");
+            return;
+        }
         TeamDTO teamDto = new TeamDTO
         {
             Name = team.Name,
