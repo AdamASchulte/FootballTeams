@@ -3,17 +3,13 @@ using FootballTeams.Entities;
 using Microsoft.EntityFrameworkCore;
 using Spectre.Console;
 using SQLitePCL;
+using System.Formats.Asn1;
 using System.Numerics;
 
 namespace FootballTeams.Controllers;
 
 internal static class TeamController
 {
-    public static void AddTeam()
-    {
-        return;
-    }
-
     public static void UpdateTeamMascot(string teamName)
     {
         using var _context = new ApplicationDbContext();
@@ -21,7 +17,7 @@ internal static class TeamController
         Team team = _context.Teams.FirstOrDefault(t => t.Name == teamName);
         if (team == null)
         {
-            AnsiConsole.WriteLine("Critical Error, Team not found");
+            AnsiConsole.WriteLine("Critical Error, Team not found\n");
             return;
         }
 
@@ -33,6 +29,8 @@ internal static class TeamController
 
         _context.SaveChanges();
 
+        AnsiConsole.WriteLine($"{teamName} mascot is now {mascotName}\n");
+
         return;
     }
 
@@ -43,7 +41,7 @@ internal static class TeamController
         Team team = _context.Teams.FirstOrDefault(t => t.Name == teamName);
         if (team == null)
         {
-            AnsiConsole.WriteLine("Critical Error, Team not found");
+            AnsiConsole.WriteLine("Critical Error, Team not found\n");
             return;
         }
 
@@ -55,6 +53,8 @@ internal static class TeamController
 
         _context.SaveChanges();
 
+        AnsiConsole.WriteLine($"{teamName} owner is now: {ownerName}\n");
+
         return;
     }
 
@@ -64,7 +64,7 @@ internal static class TeamController
         Team team = _context.Teams.Include(t => t.Staff).FirstOrDefault(t => t.Name == teamName);
         if(team == null)
         {
-            AnsiConsole.WriteLine("Critical Error, Team not found");
+            AnsiConsole.WriteLine("Critical Error, Team not found\n");
             return;
         }
 
@@ -84,6 +84,12 @@ internal static class TeamController
         _context.Teams.Update(team);
 
         _context.SaveChanges();
+
+        string response = $"{teamName} staff is now:\nHead Coach: {headCoach}\nOffensive Coordinator: {offensiveCoordinator}\nDefensive Coordinator: {defensiveCoordinator}\nSpecial Teams Coordinator: {specialTeamsCoordinator}\n";
+
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
     //public static void UpdateTeam(UpdateTeamDTO teamDto)
@@ -179,7 +185,7 @@ internal static class TeamController
             {
                 teamStatString += $"Stats for the {teamStat.Season} season:\nWins: {teamStat.Wins}\nLosses: {teamStat.Losses}\n";
             }
-            string currentTeam = $"Info for the {teamDto.Name}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \nHead Coach: {teamDto.Staff.HeadCoach}\nOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\nDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}"; ;
+            string currentTeam = $"Info for the {teamDto.Name}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \nHead Coach: {teamDto.Staff.HeadCoach}\nOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\nDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}\n"; ;
 
             response += currentTeam;
         }
@@ -193,7 +199,7 @@ internal static class TeamController
         Team team = _context.Teams.Include(t => t.Staff).Include(t => t.Location).Include(t => t.TeamStats).Include(t => t.Players).Include(t => t.Stadium).FirstOrDefault(t => t.Name.ToLower().Trim() == teamName.ToLower().Trim());
         if(team == null )
         {
-            AnsiConsole.WriteLine("Critical Error, No team found with that name");
+            AnsiConsole.WriteLine("Critical Error, No team found with that name\n");
             return;
         }
         TeamDTO teamDto = new TeamDTO
@@ -412,10 +418,10 @@ internal static class TeamController
 
     public static void GetStatsForTeamBySeason(string teamName)
     {
-        int season = AnsiConsole.Ask<int>("Please type a year after 2016 and press enter: ");
+        int season = AnsiConsole.Ask<int>("Please type a year 2020 or later and press enter: ");
         using var _context = new ApplicationDbContext();
 
-        TeamStats teamStats = _context.TeamStats.FirstOrDefault(ts => ts.Season == season && ts.Team.Name.ToLower().Trim() == teamName.ToLower().Trim());
+        TeamStats teamStats = _context.TeamStats.Include(ts => ts.Team).FirstOrDefault(ts => ts.Season == season && ts.Team.Name.ToLower().Trim() == teamName.ToLower().Trim());
         if (teamStats == null)
         {
             AnsiConsole.WriteLine($"No team stats for the {teamName} for the {season} season\n");

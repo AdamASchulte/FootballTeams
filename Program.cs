@@ -97,10 +97,10 @@ class Program
                                         TeamController.UpdateTeamStaff(teamName);
                                         break;
                                     case (AddOrUpdateOptions.AddPlayer): 
-                                        //Implement AddPlayer
+                                        PlayerController.AddPlayer(teamName);
                                         break;
                                     case (AddOrUpdateOptions.UpdatePlayerSalary): 
-                                        //Implement UpdatePlayerSalary
+                                        PlayerController.UpdatePlayerSalary(teamName);
                                         break;
                                     case (AddOrUpdateOptions.DeletePlayer):
                                         //Implement DeletePlayer
@@ -196,10 +196,10 @@ class Program
                         PlayerController.GetPlayersByTeam(teamName);
                         break;
                     case (TeamMenuOptions.GetPlayerByJerseyNumber):
-                        PlayerController.GetPlayerByJerseryNumber(teamName, 1);
+                        PlayerController.GetPlayerByJerseryNumber(teamName);
                         break;
                     case (TeamMenuOptions.GetPlayerByName):
-                        PlayerController.GetPlayerByName(teamName, "playerName");
+                        PlayerController.GetPlayerByName(teamName);
                         break;
                     case (TeamMenuOptions.GetTeamStadium):
                         TeamController.GetStadiumByTeam(teamName);

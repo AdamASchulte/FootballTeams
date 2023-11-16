@@ -1,5 +1,6 @@
 ﻿using FootballTeams.Entities;
 using FootballTeams.Entities.Configurations;
+using FootballTeams.Entities.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace FootballTeams;
@@ -20,13 +21,14 @@ internal class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfiguration(new TeamConfig());
         modelBuilder.ApplyConfiguration(new PlayerConfig());
         modelBuilder.ApplyConfiguration(new TeamStatsConfig());
         modelBuilder.ApplyConfiguration(new StaffConfig());
         modelBuilder.ApplyConfiguration(new StadiumConfig());
         modelBuilder.ApplyConfiguration(new LocationConfig());
-        base.OnModelCreating(modelBuilder);
+        Seeding.Seed(modelBuilder);
     }
     public override int SaveChanges()
     {

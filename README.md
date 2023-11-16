@@ -8,3 +8,5 @@ Open FootballTeams.sln in Visual studio. This can be done by navigating the file
 Run project.
 
 Use arrow keys + enter to navigate the usre interface.
+
+List of Player Names will go here eventually.
