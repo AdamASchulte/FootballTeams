@@ -179,13 +179,13 @@ internal static class TeamController
             string teamStatString = "";
             foreach (var player in teamDto.Players)
             {
-                playerString += $"Player: {player.Name}\nJersery Number: {player.JerseyNumber}\nPosition: {player.Position}\nSalary: {player.Salary}\n";
+                playerString += $"Player: {player.Name}\n\tJersery Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: {player.Salary}\n";
             }
             foreach(var teamStat in teamDto.TeamStats)
             {
-                teamStatString += $"Stats for the {teamStat.Season} season:\nWins: {teamStat.Wins}\nLosses: {teamStat.Losses}\n";
+                teamStatString += $"Stats for the {teamStat.Season} season:\n\tWins: {teamStat.Wins}\n\tLosses: {teamStat.Losses}\n";
             }
-            string currentTeam = $"Info for the {teamDto.Name}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \nHead Coach: {teamDto.Staff.HeadCoach}\nOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\nDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}\n"; ;
+            string currentTeam = $"Info for the {teamDto.Name}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \n\tHead Coach: {teamDto.Staff.HeadCoach}\n\tOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\n\tDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\n\tSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}\n"; ;
 
             response += currentTeam;
         }
@@ -226,7 +226,8 @@ internal static class TeamController
             TeamStats = team.TeamStats.Select(ts => new TeamStatsDTO
             {
                 Wins = ts.Wins,
-                Losses = ts.Losses
+                Losses = ts.Losses,
+                Season = ts.Season
             }).ToList(),
             Players = team.Players.Select(p => new PlayerDTO
             {
@@ -263,15 +264,15 @@ internal static class TeamController
         string teamStatString = "";
         foreach (var teamStat in teamDto.TeamStats)
         {
-            teamStatString += $"Stats for the {teamStat.Season} season:\nWins: {teamStat.Wins}\nLosses: {teamStat.Losses}\n";
+            teamStatString += $"Stats for the {teamStat.Season} season:\n\tWins: {teamStat.Wins}\n\tLosses: {teamStat.Losses}\n";
         }
         string playerString = "";
         foreach(PlayerDTO player in teamDto.Players)
         {
-            playerString += $"Player: {player.Name}\nJersery Number: {player.JerseyNumber}\nPosition: {player.Position}\nSalary: {player.Salary}\n";
+            playerString += $"Player: {player.Name}\n\tJersery Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: {player.Salary}\n";
         }
 
-        string response = $"Info for the {teamName}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \nHead Coach: {teamDto.Staff.HeadCoach}\nOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\nDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}";
+        string response = $"Info for the {teamName}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \n\tHead Coach: {teamDto.Staff.HeadCoach}\n\tOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\n\tDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\n\tSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}";
         AnsiConsole.WriteLine(response);
 
         return;
@@ -357,7 +358,7 @@ internal static class TeamController
         //    SpecialTeamsCooridnator = "jimbo"
         //};
 
-        string response = $"The staff for the {teamName} is:\nHead Coach: {staff.HeadCoach}\nOffensive Coordinator: {staff.OffensiveCoordinator}\nDefensive Coordinator: {staff.DefensiveCoordinator}\nSpecial Teams Coordinator: {staff.SpecialTeamsCooridnator}\n";
+        string response = $"The staff for the {teamName} is:\n\tHead Coach: {staff.HeadCoach}\n\tOffensive Coordinator: {staff.OffensiveCoordinator}\n\tDefensive Coordinator: {staff.DefensiveCoordinator}\n\tSpecial Teams Coordinator: {staff.SpecialTeamsCooridnator}\n";
         AnsiConsole.WriteLine(response);
 
         return;
@@ -408,7 +409,7 @@ internal static class TeamController
 
         foreach(TeamStatsDTO teamStats in allTeamStats)
         {
-            response += $"Stats for the {name} in {teamStats.Season}: \nWins: {teamStats.Wins}\nLosses: {teamStats.Losses}\n";
+            response += $"Stats for the {name} in {teamStats.Season}: \n\tWins: {teamStats.Wins}\n\tLosses: {teamStats.Losses}\n";
         }
 
         AnsiConsole.WriteLine(response);
