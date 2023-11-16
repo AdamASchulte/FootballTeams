@@ -179,7 +179,7 @@ internal static class TeamController
             string teamStatString = "";
             foreach (var player in teamDto.Players)
             {
-                playerString += $"Player: {player.Name}\n\tJersery Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: {player.Salary}\n";
+                playerString += $"Player: {player.Name}\n\tJersery Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: ${player.Salary}\n";
             }
             foreach(var teamStat in teamDto.TeamStats)
             {
@@ -229,7 +229,7 @@ internal static class TeamController
                 Losses = ts.Losses,
                 Season = ts.Season
             }).ToList(),
-            Players = team.Players.Select(p => new PlayerDTO
+            Players = team.Players.OrderBy(p => p.JerseyNumber).Select(p => new PlayerDTO
             {
                 Name = p.Name,
                 TeamName = team.Name,
@@ -266,10 +266,10 @@ internal static class TeamController
         {
             teamStatString += $"Stats for the {teamStat.Season} season:\n\tWins: {teamStat.Wins}\n\tLosses: {teamStat.Losses}\n";
         }
-        string playerString = "";
+        string playerString = "Players: \n";
         foreach(PlayerDTO player in teamDto.Players)
         {
-            playerString += $"Player: {player.Name}\n\tJersery Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: {player.Salary}\n";
+            playerString += $"{player.Name}\n\tJersery Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: ${player.Salary}\n";
         }
 
         string response = $"Info for the {teamName}:\nOwner: {teamDto.OwnerName}\nMascot: {teamDto.Mascot}\nLocation: {teamDto.Location.City}, {teamDto.Location.State}\nStaff: \n\tHead Coach: {teamDto.Staff.HeadCoach}\n\tOffensive Coordinator: {teamDto.Staff.OffensiveCoordinator}\n\tDefensive Coordinator: {teamDto.Staff.DefensiveCoordinator}\n\tSpecial Teams Coordinator: {teamDto.Staff.SpecialTeamsCooridnator}\n{teamStatString}{playerString}";

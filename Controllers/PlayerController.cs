@@ -37,7 +37,9 @@ internal class PlayerController
 
                 _context.SaveChanges();
 
-                AnsiConsole.WriteLine($"Player {playerName} Successfully removed from the database");
+                AnsiConsole.WriteLine($"Player {playerName} Successfully removed from the database\n");
+
+                return;
             }
         }
     }
@@ -75,7 +77,7 @@ internal class PlayerController
 
                 _context.SaveChanges();
 
-                AnsiConsole.WriteLine($"Player {playerName} now has salary: ${salary}");
+                AnsiConsole.WriteLine($"Player {playerName} now has salary: ${salary}\n");
 
                 return;
             }
@@ -86,13 +88,47 @@ internal class PlayerController
     {
         using var _context = new ApplicationDbContext();
 
-        string playerName = AnsiConsole.Ask<string>("Please enter the name of the new player");
+        string playerName = "";
+        bool playerNameisDuplicate = true;
 
-        int jerseyNumber = AnsiConsole.Ask<int>("Please enter the jersery number of the new player");
+        while (playerNameisDuplicate)
+        {
+            playerName = AnsiConsole.Ask<string>("Please enter the name of the new player");
+            if(!_context.Players.Any(p => p.Name.ToLower().Trim() == playerName))
+            {
+                playerNameisDuplicate = false;
+            }
+            else
+            {
+                AnsiConsole.WriteLine($"There already exists a player with this name on {teamName}");
+            }
+        }
+
+        int jerseyNumber = -1;
+        bool jerseyNumberisDuplicate = true;
+        while(jerseyNumberisDuplicate)
+        {
+            jerseyNumber = AnsiConsole.Ask<int>("Please enter the jersey number of the new player");
+            if(!_context.Players.Include(p => p.Team).Any(p => p.Team.Name == teamName && p.JerseyNumber == jerseyNumber))
+            {
+                jerseyNumberisDuplicate = false;
+            }
+            else
+            {
+                AnsiConsole.WriteLine($"There already exists a player with that number on {teamName}");
+            }
+        }
 
         int salary = AnsiConsole.Ask<int>("Please enter the salary of the new player");
 
-        string position = AnsiConsole.Ask<string>("Please enter the position of the new player");
+        string position = AnsiConsole.Ask<string>("Please enter the position of the new player\n");
+
+        Team team = _context.Teams.FirstOrDefault(t => t.Name == teamName);
+        if(team == null)
+        {
+            AnsiConsole.WriteLine("Critical Error, Team could not be found\n");
+            return;
+        }
 
         Player player = new Player()
         {
@@ -100,23 +136,19 @@ internal class PlayerController
             JerseyNumber = jerseyNumber,
             Salary = salary,
             Position = position,
-            TeamId = _context.Teams.FirstOrDefault(t => t.Name == teamName) != null ? _context.Teams.FirstOrDefault(t => t.Name == teamName).Id : Guid.Empty
+            TeamId = team.Id
         };
 
-        if(player.TeamId != Guid.Empty)
-        {
-            AnsiConsole.WriteLine("Critical Error, Team could not be found");
-            return;
-        }
+        
 
         _context.Add(player);
 
         _context.SaveChanges();
     }
-    public static List<PlayerDTO> GetPlayersByTeam(string teamName)
+    public static void GetPlayersByTeam(string teamName)
     {
         using var _context = new ApplicationDbContext();
-        List<PlayerDTO> players = _context.Players.Include(p => p.Team).Where(p => p.Team.Name == teamName)
+        List<PlayerDTO> players = _context.Players.Include(p => p.Team).Where(p => p.Team.Name == teamName).OrderBy(p => p.JerseyNumber)
             .Select(p => new PlayerDTO
             {
                 Name = p.Name,
@@ -126,7 +158,16 @@ internal class PlayerController
                 Salary = p.Salary
             }).ToList();
 
-        return players;
+        string response = $"All Players on {teamName}:\n";
+        foreach (var player in players)
+        {
+            string currentPlayer = $"{player.Name}:\n\tJersey Number: {player.JerseyNumber}\n\tPosition: {player.Position}\n\tSalary: ${player.Salary}\n";
+            response += currentPlayer;
+        }
+
+        AnsiConsole.WriteLine(response);
+
+        return;
     }
 
     public static void GetPlayerByName(string teamName)
