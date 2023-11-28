@@ -17,7 +17,7 @@ STEPS TO RUN:
 
 3. Open FootballTeams.sln in Visual studio. This can be done by navigating the file explorer to the project folder, then right clicking FootballTeams.sln, and opening it with Visual Studio.
 
-4. Inside the project, open the solution explorer,  right click the Project Folder "FootballTeams" directly above "Dependencies", select "Manage NuGet Packages", install the following packages:
+4. Inside the project, click "view" at the top left and open the solution explorer, right click the Project Folder "FootballTeams" directly above "Dependencies", select "Manage NuGet Packages", install the following packages:
 	Microsoft.EntityFrameworkCore , Microsoft.EntityFrameworkCore.Sqlite.Core, Microsoft.EntityFrameworkCore.Tools, Newtonsoft.Jsom, Spectre.Console, SQLitePCLRaw.bundle_green
 
 5. Next to the Run button at the top of Visual Studio, there is a tiny grey drop down arrow. Click the arrow, select "FootballTeams Debug Properties". 
@@ -29,4 +29,5 @@ HOW TO USE:
 
 Use arrow keys + enter to navigate the user interface.
 
-List of Player Names will go here once we populate the player table.
+go to this site and plug in the .db file from this project to search for player names and numbers. Simply query with: SELECT * from players
+https://www.db-book.com/university-lab-dir/sqljs.html
